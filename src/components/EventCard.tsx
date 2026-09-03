@@ -5,26 +5,60 @@ type EventCardProps = {
 };
 
 function EventCard({ event }: EventCardProps) {
-  const startTime = new Date(event.startTime * 1000).toLocaleTimeString([], {
-    hour: "numeric",
-    minute: "2-digit",
-  });
 
-  const endTime = new Date(event.endTime * 1000).toLocaleTimeString([], {
-    hour: "numeric",
-    minute: "2-digit",
-  });
+  function formatTime(time: number) {
+    const date = new Date(time * 1000);
+
+    return date.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  }
+
+  function getEventIcon(type: string) {
+    if (type === "WORKSHOP") {
+      return "⚙️";
+    }
+
+    if (type === "MEAL") {
+      return "🍽️";
+    }
+
+    if (type === "SPEAKER") {
+      return "🎤";
+    }
+
+    if (type === "MINIEVENT") {
+      return "⭐";
+    }
+
+    return "🌊";
+  }
+
+  const startTime = formatTime(event.startTime);
+  const endTime = formatTime(event.endTime);
+
+  const icon = getEventIcon(event.eventType);
 
   return (
-    <div>
-      <h2>{event.name}</h2>
+    <div className="event-card">
 
-      <p>
-        {startTime} - {endTime}
+      <div className="event-card-header">
+        <h2>{event.name}</h2>
+
+        <span className="event-type">
+          {icon} {event.eventType}
+        </span>
+      </div>
+
+      <p className="event-time">
+        🫧 {startTime} - {endTime}
       </p>
 
-      <p>{event.eventType}</p>
-      <p>{event.description}</p>
+      <p className="event-description">
+        {event.description}
+      </p>
+
     </div>
   );
 }
