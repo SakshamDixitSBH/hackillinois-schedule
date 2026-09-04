@@ -14,7 +14,9 @@
 .schedule-page {
   width: 90%;
   max-width: 950px;
+
   margin: auto;
+
   padding: 70px 0 45px 0;
 
   position: relative;
@@ -26,43 +28,54 @@
 
 .schedule-header {
   text-align: center;
+
   margin-bottom: 18px;
 }
 
 .schedule-header h1 {
   color: #f0ffff;
+
   font-size: 46px;
+
   margin: 5px 0;
 }
 
 .subtitle {
   color: #acd9e4;
+
   font-size: 16px;
+
   max-width: 600px;
+
   margin: 10px auto;
 }
 
 .schedule-stats {
   display: flex;
   justify-content: center;
+
   gap: 10px;
 
   margin-top: 20px;
 
   color: #70b7c8;
+
   font-size: 12px;
   font-weight: bold;
+
   letter-spacing: 1px;
 }
 
 
-/* Simple wave */
+/* Wave */
 
 .wave-line {
   text-align: center;
 
   color: #48c9e8;
+
   font-size: 24px;
+
   letter-spacing: 6px;
 
   margin-bottom: 25px;
@@ -71,11 +84,52 @@
 }
 
 
+/* All Events / My Schedule */
+
+.schedule-mode-buttons {
+  display: flex;
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-bottom: 20px;
+}
+
+.schedule-mode-buttons button {
+  padding: 10px 18px;
+
+  background-color: #0b3b4c;
+  color: #a8dbe5;
+
+  border: 1px solid #337b91;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+}
+
+.schedule-mode-buttons button:hover {
+  background-color: #145269;
+}
+
+.schedule-mode-buttons .active-mode {
+  background-color: #55d6e8;
+
+  color: #052b38;
+
+  border-color: #7be9f7;
+
+  font-weight: bold;
+}
+
+
 /* Day buttons */
 
 .day-buttons {
   display: flex;
   justify-content: center;
+
   gap: 10px;
 
   margin-bottom: 22px;
@@ -103,6 +157,7 @@
 
 .day-buttons .active-day {
   background-color: #55d6e8;
+
   color: #052b38;
 
   border-color: #7be9f7;
@@ -135,6 +190,7 @@
   padding: 14px 12px;
 
   border: none;
+
   outline: none;
 
   background-color: transparent;
@@ -193,6 +249,7 @@
 
 .type-buttons .active-type {
   background-color: #258ca3;
+
   color: white;
 
   border-color: #66dff2;
@@ -242,6 +299,31 @@
   color: #85bcca;
 
   font-size: 12px;
+}
+
+
+/* Loading and errors */
+
+.status-message {
+  text-align: center;
+
+  padding: 40px;
+
+  color: #b7e6ed;
+}
+
+.error-message {
+  text-align: center;
+
+  padding: 25px;
+
+  color: #ffd0d0;
+
+  background-color: rgba(105, 35, 35, 0.4);
+
+  border: 1px solid #b86666;
+
+  border-radius: 10px;
 }
 
 
@@ -311,12 +393,65 @@
   margin: 10px 0;
 }
 
+
+/* Location */
+
+.event-locations {
+  margin: 8px 0 12px 0;
+}
+
+.location-link {
+  display: block;
+
+  color: #7be8f2;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  margin-bottom: 4px;
+}
+
+.location-link:hover {
+  color: #baf5ff;
+
+  text-decoration: underline;
+}
+
+
 .event-description {
   color: #b7d8df;
 
   line-height: 1.5;
 
-  margin-bottom: 0;
+  margin-bottom: 15px;
+}
+
+
+/* Save button */
+
+.save-button {
+  padding: 8px 12px;
+
+  background-color: transparent;
+  color: #8edbe8;
+
+  border: 1px solid #337b91;
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: #10485a;
+}
+
+.save-button.saved {
+  background-color: #55d6e8;
+
+  color: #052b38;
+
+  border-color: #7be9f7;
 }
 
 
@@ -337,7 +472,7 @@
 }
 
 
-/* Bubbles */
+/* Background bubbles */
 
 .ocean-background {
   position: fixed;
@@ -422,6 +557,7 @@
   animation-delay: 9s;
 }
 
+
 @keyframes floatUp {
   from {
     transform: translateY(0);
@@ -456,6 +592,10 @@
     gap: 6px;
 
     font-size: 10px;
+  }
+
+  .schedule-mode-buttons {
+    flex-direction: column;
   }
 
   .event-card-header {

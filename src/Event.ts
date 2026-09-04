@@ -1,3 +1,9 @@
+export type Location = {
+  description: string;
+  latitude: number;
+  longitude: number;
+};
+
 export type Event = {
   eventId: string;
   name: string;
@@ -5,4 +11,5 @@ export type Event = {
   startTime: number;
   endTime: number;
   eventType: string;
+  locations: Location[];
 };

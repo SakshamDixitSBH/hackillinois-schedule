@@ -11,26 +11,61 @@ function App() {
   const [selectedType, setSelectedType] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [savedEventIds, setSavedEventIds] = useState<string[]>([]);
+  const [showSavedOnly, setShowSavedOnly] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+
+
+  useEffect(() => {
+    const savedEvents = localStorage.getItem("savedEvents");
+
+    if (savedEvents) {
+      const savedEventArray = JSON.parse(savedEvents);
+
+      setSavedEventIds(savedEventArray);
+    }
+  }, []);
+
+
+
   useEffect(() => {
     fetch("https://adonix.hackillinois.org/event/")
       .then((response) => {
+        if (!response.ok) {
+          throw new Error("Could not load events");
+        }
+
         return response.json();
       })
       .then((data) => {
+        console.log(data.events[0].locations[0]);
         setEvents(data.events);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching events:", error);
+
+        setError("Could not load the schedule. Please try again.");
+        setLoading(false);
       });
   }, []);
+
+
 
   function getEventDay(event: Event) {
     const date = new Date(event.startTime * 1000);
 
-    return date.toLocaleDateString("en-US", {
+    const day = date.toLocaleDateString("en-US", {
       weekday: "long",
     });
+
+    return day;
   }
+
+
 
   function getDays() {
     const days: string[] = [];
@@ -46,6 +81,8 @@ function App() {
     return days;
   }
 
+
+
   function getEventTypes() {
     const types: string[] = [];
 
@@ -58,10 +95,45 @@ function App() {
     return types;
   }
 
+
+
+  function toggleSavedEvent(eventId: string) {
+    let updatedSavedEvents: string[];
+
+    if (savedEventIds.includes(eventId)) {
+      updatedSavedEvents = savedEventIds.filter((savedId) => {
+        return savedId !== eventId;
+      });
+    } else {
+      updatedSavedEvents = [...savedEventIds, eventId];
+    }
+
+    setSavedEventIds(updatedSavedEvents);
+
+    localStorage.setItem(
+      "savedEvents",
+      JSON.stringify(updatedSavedEvents)
+    );
+  }
+
+
+
   const days = getDays();
   const eventTypes = getEventTypes();
 
+
+
   let filteredEvents = events;
+
+
+
+  if (showSavedOnly) {
+    filteredEvents = filteredEvents.filter((event) => {
+      return savedEventIds.includes(event.eventId);
+    });
+  }
+
+
 
   if (selectedDay !== "All") {
     filteredEvents = filteredEvents.filter((event) => {
@@ -69,16 +141,21 @@ function App() {
     });
   }
 
+
+
   if (selectedType !== "All") {
     filteredEvents = filteredEvents.filter((event) => {
       return event.eventType === selectedType;
     });
   }
 
+
+
   if (searchTerm !== "") {
     filteredEvents = filteredEvents.filter((event) => {
       const eventName = event.name.toLowerCase();
       const eventDescription = event.description.toLowerCase();
+
       const search = searchTerm.toLowerCase();
 
       const nameMatches = eventName.includes(search);
@@ -88,9 +165,13 @@ function App() {
     });
   }
 
+
+
   filteredEvents = [...filteredEvents].sort((event1, event2) => {
     return event1.startTime - event2.startTime;
   });
+
+
 
   return (
     <div>
@@ -103,11 +184,13 @@ function App() {
         <span className="bubble bubble6"></span>
       </div>
 
+
       <img
         src={hackIllinoisLogo}
         alt="HackIllinois"
         className="hackillinois-logo"
       />
+
 
       <main className="schedule-page">
 
@@ -127,9 +210,32 @@ function App() {
           </div>
         </header>
 
+
         <div className="wave-line">
           ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
         </div>
+
+
+        <div className="schedule-mode-buttons">
+          <button
+            className={!showSavedOnly ? "active-mode" : ""}
+            onClick={() => {
+              setShowSavedOnly(false);
+            }}
+          >
+            All Events
+          </button>
+
+          <button
+            className={showSavedOnly ? "active-mode" : ""}
+            onClick={() => {
+              setShowSavedOnly(true);
+            }}
+          >
+            My Schedule ({savedEventIds.length})
+          </button>
+        </div>
+
 
         <div className="day-buttons">
           <button
@@ -156,6 +262,7 @@ function App() {
           })}
         </div>
 
+
         <div className="search-section">
           <span className="search-icon">🔎</span>
 
@@ -169,7 +276,11 @@ function App() {
           />
         </div>
 
-        <p className="filter-label">EXPLORE BY CATEGORY</p>
+
+        <p className="filter-label">
+          EXPLORE BY CATEGORY
+        </p>
+
 
         <div className="type-buttons">
           <button
@@ -196,9 +307,12 @@ function App() {
           })}
         </div>
 
+
         <div className="current-view">
           <div>
-            <span className="current-label">CURRENT DIVE</span>
+            <span className="current-label">
+              CURRENT DIVE
+            </span>
 
             <p>
               {selectedDay.toUpperCase()} / {selectedType.toUpperCase()}
@@ -210,23 +324,59 @@ function App() {
           </span>
         </div>
 
-        <div className="events-container">
-          {filteredEvents.map((event) => {
-            return (
-              <EventCard
-                key={event.eventId}
-                event={event}
-              />
-            );
-          })}
 
-          {filteredEvents.length === 0 && (
-            <div className="no-events">
-              <p className="no-events-icon">🐚</p>
-              <p>No events found down here.</p>
-            </div>
-          )}
-        </div>
+        {loading && (
+          <div className="status-message">
+            <p>🫧 Loading events...</p>
+          </div>
+        )}
+
+
+        {error !== "" && (
+          <div className="error-message">
+            <p>{error}</p>
+          </div>
+        )}
+
+
+        {!loading && error === "" && (
+          <div className="events-container">
+
+            {filteredEvents.map((event) => {
+              const eventIsSaved =
+                savedEventIds.includes(event.eventId);
+
+              return (
+                <EventCard
+                  key={event.eventId}
+                  event={event}
+                  isSaved={eventIsSaved}
+                  onSave={toggleSavedEvent}
+                />
+              );
+            })}
+
+
+            {filteredEvents.length === 0 && (
+              <div className="no-events">
+                <p className="no-events-icon">
+                  🐚
+                </p>
+
+                {showSavedOnly ? (
+                  <p>
+                    You haven't saved any events here yet.
+                  </p>
+                ) : (
+                  <p>
+                    No events found down here.
+                  </p>
+                )}
+              </div>
+            )}
+
+          </div>
+        )}
 
       </main>
     </div>
