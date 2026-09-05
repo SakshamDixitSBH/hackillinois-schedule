@@ -1,26 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+
 * {
   box-sizing: border-box;
 }
 
+
 body {
   margin: 0;
 
-  font-family: Arial, Helvetica, sans-serif;
-
-  background:
-    linear-gradient(
-      to bottom,
-      #0b6680 0%,
-      #075064 20%,
-      #073c50 45%,
-      #062d3d 70%,
-      #041d2a 100%
-    );
-
-  background-attachment: fixed;
+  font-family: "Space Grotesk", sans-serif;
 
   color: white;
+
+  min-height: 100vh;
 }
+
+
+button,
+input {
+  font-family: "Space Grotesk", sans-serif;
+}
+
 
 #root {
   min-height: 100vh;

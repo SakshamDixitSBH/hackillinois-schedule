@@ -12,4 +12,5 @@ export type Event = {
   endTime: number;
   eventType: string;
   locations: Location[];
+  mapImageUrl: string;
 };

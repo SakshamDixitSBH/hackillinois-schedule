@@ -5,6 +5,7 @@ type EventCardProps = {
   event: Event;
   isSaved: boolean;
   onSave: (eventId: string) => void;
+  onDetails: (event: Event) => void;
 };
 
 
@@ -12,50 +13,38 @@ function EventCard({
   event,
   isSaved,
   onSave,
+  onDetails,
 }: EventCardProps) {
 
 
   function formatTime(time: number) {
     const date = new Date(time * 1000);
 
-    const formattedTime = date.toLocaleTimeString([], {
+    return date.toLocaleTimeString([], {
       hour: "numeric",
       minute: "2-digit",
     });
-
-    return formattedTime;
   }
 
 
   function getEventIcon(type: string) {
     if (type === "WORKSHOP") {
-      return "⚙️";
+      return "⚙";
     }
 
     if (type === "MEAL") {
-      return "🍽️";
+      return "🍴";
     }
 
     if (type === "SPEAKER") {
-      return "🎤";
+      return "◉";
     }
 
     if (type === "MINIEVENT") {
-      return "⭐";
+      return "✦";
     }
 
-    return "🌊";
-  }
-
-
-  function getGoogleMapsLink(
-    latitude: number,
-    longitude: number
-  ) {
-    const link =
-      `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-
-    return link;
+    return "≈";
   }
 
 
@@ -82,34 +71,26 @@ function EventCard({
 
 
       <p className="event-time">
-        🫧 {startTime} - {endTime}
+        ◷ {startTime} — {endTime}
       </p>
 
 
-      {event.locations.length > 0 && (
-        <div className="event-locations">
+      {event.locations.map((location, index) => {
+        const mapsLink =
+          `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
 
-          {event.locations.map((location, index) => {
-            const mapsLink = getGoogleMapsLink(
-              location.latitude,
-              location.longitude
-            );
-
-            return (
-              <a
-                key={index}
-                href={mapsLink}
-                target="_blank"
-                rel="noreferrer"
-                className="location-link"
-              >
-                📍 {location.description} ↗
-              </a>
-            );
-          })}
-
-        </div>
-      )}
+        return (
+          <a
+            key={index}
+            href={mapsLink}
+            target="_blank"
+            rel="noreferrer"
+            className="location-link"
+          >
+            📍 {location.description} ↗
+          </a>
+        );
+      })}
 
 
       <p className="event-description">
@@ -117,14 +98,28 @@ function EventCard({
       </p>
 
 
-      <button
-        className={isSaved ? "save-button saved" : "save-button"}
-        onClick={() => {
-          onSave(event.eventId);
-        }}
-      >
-        {isSaved ? "★ Saved" : "☆ Save to My Schedule"}
-      </button>
+      <div className="event-actions">
+
+        <button
+          className="details-button"
+          onClick={() => {
+            onDetails(event);
+          }}
+        >
+          View Details
+        </button>
+
+
+        <button
+          className={isSaved ? "save-button saved" : "save-button"}
+          onClick={() => {
+            onSave(event.eventId);
+          }}
+        >
+          {isSaved ? "★ In My Route" : "☆ Add to Route"}
+        </button>
+
+      </div>
 
     </div>
   );
