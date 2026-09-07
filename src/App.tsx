@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Event } from "./Event";
-import EventCard from "./components/EventCard";
+import EventCard from "./EventCard";
 import hackIllinoisLogo from "./assets/hackillinois-logo.png";
-import atlantisBackground from "./assets/atlantis.jpg";
+import bubble from "./assets/bubble.png";
 import "./App.css";
 
 
@@ -168,18 +168,37 @@ function App() {
 
 
   return (
-    <div
-      className="app-background"
-      style={{
-        backgroundImage: `url(${atlantisBackground})`,
-      }}
-    >
+    <div className="app-background">
 
       <div className="ocean-background">
-        <span className="bubble bubble1"></span>
-        <span className="bubble bubble2"></span>
-        <span className="bubble bubble3"></span>
-        <span className="bubble bubble4"></span>
+        <img
+    src={bubble}
+    className="bubble bubble1"
+    alt=""
+  />
+
+  <img
+    src={bubble}
+    className="bubble bubble2"
+    alt=""
+  />
+
+  <img
+    src={bubble}
+    className="bubble bubble3"
+    alt=""
+  />
+
+  <img
+    src={bubble}
+    className="bubble bubble4"
+    alt=""
+  />
+  <img
+    src={bubble}
+    className="bubble bubble5"
+    alt=""
+  />
       </div>
 
 
@@ -222,13 +241,14 @@ function App() {
               All Events
             </button>
 
+
             <button
               className={showSavedOnly ? "active-mode" : ""}
               onClick={() => {
                 setShowSavedOnly(true);
               }}
             >
-              ★ My Route ({savedEventIds.length})
+              My Route ({savedEventIds.length})
             </button>
 
           </div>
@@ -244,6 +264,7 @@ function App() {
             >
               All Days
             </button>
+
 
             {days.map((day) => {
               return (
@@ -292,6 +313,7 @@ function App() {
               ALL
             </button>
 
+
             {eventTypes.map((type) => {
               return (
                 <button
@@ -313,10 +335,7 @@ function App() {
 
         <div className="events-heading">
           <span>EVENTS</span>
-
-          <span>
-            {filteredEvents.length} showing
-          </span>
+          <span>{filteredEvents.length} showing</span>
         </div>
 
 
@@ -335,6 +354,7 @@ function App() {
 
 
         {!loading && error === "" && (
+
           <div className="events-container">
 
             {filteredEvents.map((event) => {
@@ -365,6 +385,7 @@ function App() {
 
 
       {selectedEvent !== null && (
+
         <div
           className="modal-background"
           onClick={() => {
@@ -385,7 +406,7 @@ function App() {
                 setSelectedEvent(null);
               }}
             >
-              ×
+              ⓧ
             </button>
 
 
@@ -406,32 +427,24 @@ function App() {
             </p>
 
 
-            {selectedEvent.locations.map((location, index) => {
-              const mapsLink =
-                `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
-
-              return (
-                <a
-                  key={index}
-                  href={mapsLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="modal-location"
-                >
-                  📍 {location.description} ↗
-                </a>
-              );
-            })}
+            {selectedEvent.locations.length > 0 && (
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${selectedEvent.locations[0].latitude},${selectedEvent.locations[0].longitude}`}
+                target="_blank"
+                className="modal-location"
+              >
+                📍 {selectedEvent.locations[0].description} ↗
+              </a>
+            )}
 
 
             {selectedEvent.mapImageUrl !== "" && (
               <a
                 href={selectedEvent.mapImageUrl}
                 target="_blank"
-                rel="noreferrer"
                 className="floor-map-button"
               >
-                🗺 View Floor Map
+                🗺️ View Floor Map
               </a>
             )}
 

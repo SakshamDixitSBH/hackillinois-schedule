@@ -1,4 +1,4 @@
-import type { Event } from "../Event";
+import type { Event } from "./Event";
 
 
 type EventCardProps = {
@@ -73,24 +73,6 @@ function EventCard({
       <p className="event-time">
         ◷ {startTime} — {endTime}
       </p>
-
-
-      {event.locations.map((location, index) => {
-        const mapsLink =
-          `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
-
-        return (
-          <a
-            key={index}
-            href={mapsLink}
-            target="_blank"
-            rel="noreferrer"
-            className="location-link"
-          >
-            📍 {location.description} ↗
-          </a>
-        );
-      })}
 
 
       <p className="event-description">
